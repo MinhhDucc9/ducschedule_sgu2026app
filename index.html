@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Khung Thoi Khoa Bieu</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="heart-layer" id="heartLayer" aria-hidden="true"></div>
+  <main class="frame">
+    <section class="search-panel">
+      <h2 class="search-title">Thời Khóa Biểu</h2>
+      <p class="search-subtitle">Học kỳ 3 - Năm học 2025 - 2026</p>
+
+      <div class="search-wrapper">
+        <div class="search-row">
+          <label class="search-label" for="subjectSearch">Môn Học:</label>
+          <div class="search-input-wrapper">
+            <input id="subjectSearch" class="search-control" type="text" placeholder="Chọn môn học..." />
+            <button id="searchBtn" class="search-btn" type="button" aria-label="Tìm Kiếm">🔍</button>
+            <div id="searchResults" class="search-results"></div>
+          </div>
+        </div>
+        <div id="danh-sach" class="danh-sach-container">
+          <h3 class="danh-sach-title">DANH SÁC MÔN HỌC</h3>
+          <div id="danhSachNhap" class="danh-sach-box"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="detailsTable" class="details-table" style="display: none;">
+      <table id="classesTable">
+        <thead>
+          <tr>
+            <th></th>
+            <th>MÃ</th>
+            <th>TÊN MÔN</th>
+            <th>TC</th>
+            <th>NHÓM</th>
+            <th>SỐ LƯỢNG</th>
+            <th>GIÁO VIÊN</th>
+            <th>THỨ</th>
+            <th>TIẾT BĐ</th>
+            <th>SỐ TIẾT</th>
+            <th>PHÒNG</th>
+            <th>TUẦN</th>
+          </tr>
+        </thead>
+        <tbody id="classesTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="topbar">
+      <div class="title-group">
+        <h1 class="title">Thời Khóa Biểu của vợ iu</h1>
+        
+      </div>
+      
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>TIẾT</th>
+            <th>GIỜ</th>
+            <th class="days-header">Thứ 2</th>
+            <th class="days-header">Thứ 3</th>
+            <th class="days-header">Thứ 4</th>
+            <th class="days-header">Thứ 5</th>
+            <th class="days-header">Thứ 6</th>
+            <th class="days-header">Thứ 7</th>
+            <th class="days-header">CN</th>
+          </tr>
+        </thead>
+        <tbody id="scheduleBody"></tbody>
+      </table>
+    </div>
+
+    <section class="week-filter" aria-label="Lọc tuần thời khóa biểu">
+      <label class="week-filter-label" for="weekSelect">Xem theo tuần:</label>
+      <div class="week-filter-control">
+        <select id="weekSelect" class="week-select"></select>
+      </div>
+    </section>
+
+    <div id="scheduleConflict" class="schedule-conflict" style="display: none;"></div>
+  </main>
+
+  <div id="scheduleConflictToast" class="schedule-conflict-toast" style="display: none;" aria-live="assertive" aria-atomic="true"></div>
+
+  <script src="script.js?v=20260324i"></script>
+</body>
