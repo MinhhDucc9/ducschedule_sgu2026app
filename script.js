@@ -1,4 +1,4 @@
-﻿const slots = [
+const slots = [
   { period: 1, time: '07:00-07:50' },
   { period: 2, time: '07:50-08:40' },
   { period: 3, time: '09:00-09:50' },
@@ -419,6 +419,8 @@ const heartLayer = document.getElementById('heartLayer');
 const weekSelect = document.getElementById('weekSelect');
 const scheduleConflict = document.getElementById('scheduleConflict');
 const scheduleConflictToast = document.getElementById('scheduleConflictToast');
+const copySyncLinkBtn = document.getElementById('copySyncLinkBtn');
+const syncStatus = document.getElementById('syncStatus');
 
 let selectedSubjects = [];
 let currentSubjectId = null;
@@ -427,6 +429,7 @@ const totalWeeks = 27;
 const termStartDate = new Date(2026, 4, 4);
 let conflictToastTimerId = null;
 const scheduleStorageKey = 'tkb_saved_state_v1';
+const stateQueryKey = 'state';
 
 // Populate schedule
 scheduleBody.innerHTML = slots
@@ -544,10 +547,23 @@ function saveScheduleState() {
   } catch (error) {
     console.warn('Không thể lưu thời khóa biểu:', error);
   }
+
+  updateSyncUrl(payload);
 }
 
 function loadScheduleState() {
   try {
+    const urlPayload = parseStateFromUrl();
+    if (urlPayload) {
+      applyStatePayload(urlPayload);
+      try {
+        localStorage.setItem(scheduleStorageKey, JSON.stringify(urlPayload));
+      } catch (error) {
+        console.warn('Không thể lưu dữ liệu đồng bộ vào máy:', error);
+      }
+      return;
+    }
+
     const raw = localStorage.getItem(scheduleStorageKey);
     if (!raw) {
       return;
@@ -569,6 +585,89 @@ function loadScheduleState() {
   } catch (error) {
     console.warn('Không thể tải thời khóa biểu đã lưu:', error);
   }
+}
+
+function safeBase64Encode(text) {
+  return btoa(unescape(encodeURIComponent(text)));
+}
+
+function safeBase64Decode(text) {
+  return decodeURIComponent(escape(atob(text)));
+}
+
+function parseStateFromUrl() {
+  try {
+    const url = new URL(window.location.href);
+    const encoded = url.searchParams.get(stateQueryKey);
+    if (!encoded) {
+      return null;
+    }
+    const json = safeBase64Decode(encoded);
+    const parsed = JSON.parse(json);
+    const cleaned = normalizeStatePayload(parsed);
+    return cleaned;
+  } catch (error) {
+    console.warn('Không thể đọc state đồng bộ từ URL:', error);
+    return null;
+  }
+}
+
+function normalizeStatePayload(payload) {
+  const week = Number(payload?.selectedWeek);
+  const normalizedWeek = Number.isInteger(week) && week >= 1 && week <= totalWeeks ? week : 1;
+  const loaded = Array.isArray(payload?.selectedSubjects) ? payload.selectedSubjects : [];
+  const normalizedSubjects = loaded
+    .map((item) => ({
+      subjectId: Number(item.subjectId),
+      group: String(item.group || '')
+    }))
+    .filter((item) => isValidSelectedGroup(item));
+  return { selectedWeek: normalizedWeek, selectedSubjects: normalizedSubjects };
+}
+
+function applyStatePayload(payload) {
+  const normalized = normalizeStatePayload(payload);
+  selectedWeek = normalized.selectedWeek;
+  selectedSubjects = normalized.selectedSubjects;
+}
+
+function updateSyncUrl(payload) {
+  try {
+    const normalized = normalizeStatePayload(payload);
+    const encoded = safeBase64Encode(JSON.stringify(normalized));
+    const url = new URL(window.location.href);
+    url.searchParams.set(stateQueryKey, encoded);
+    window.history.replaceState({}, '', url.toString());
+  } catch (error) {
+    console.warn('Không thể cập nhật link đồng bộ:', error);
+  }
+}
+
+function setSyncStatus(message, isError = false) {
+  if (!syncStatus) {
+    return;
+  }
+  syncStatus.textContent = message;
+  syncStatus.style.color = isError ? '#b4235d' : '#a24f7f';
+}
+
+function setupSyncLinkCopy() {
+  if (!copySyncLinkBtn) {
+    return;
+  }
+
+  copySyncLinkBtn.addEventListener('click', async () => {
+    try {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.get(stateQueryKey)) {
+        updateSyncUrl({ selectedWeek, selectedSubjects });
+      }
+      await navigator.clipboard.writeText(window.location.href);
+      setSyncStatus('Da copy link dong bo. Mo link nay tren thiet bi khac.');
+    } catch (error) {
+      setSyncStatus('Khong copy duoc. Hay copy URL tren thanh dia chi.', true);
+    }
+  });
 }
 
 function parseWeeks(weeksText) {
@@ -1025,7 +1124,9 @@ createHearts(80);
 // Initialize danh sach
 loadScheduleState();
 setupWeekSelector();
+setupSyncLinkCopy();
 updateDanhSach();
 renderScheduleFromSelections();
+saveScheduleState();
 
 

@@ -596,6 +596,30 @@ tbody td.class-continuation {
   box-shadow: 0 0 0 2px rgba(255, 107, 183, 0.24);
 }
 
+.sync-btn {
+  height: 38px;
+  border: 1px solid #efb8d8;
+  background: #ffe9f5;
+  color: #8b2f61;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sync-btn:hover {
+  background: #ffdff1;
+  box-shadow: 0 0 0 2px rgba(255, 107, 183, 0.18);
+}
+
+.sync-status {
+  color: #a24f7f;
+  font-size: 0.78rem;
+  min-height: 1em;
+}
+
 .schedule-conflict {
   margin-top: 12px;
   border: 1px solid #ffb3c9;
@@ -731,6 +755,14 @@ tbody td.class-continuation {
 
   .week-filter-control {
     min-width: 0;
+  }
+
+  .sync-btn {
+    width: 100%;
+  }
+
+  .sync-status {
+    width: 100%;
   }
 
   table {
