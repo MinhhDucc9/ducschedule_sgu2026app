@@ -118,6 +118,7 @@ body::after {
 }
 
 .frame {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 247, 252, 0.98) 100%);
@@ -233,7 +234,7 @@ body::after {
 .search-input-wrapper {
   position: relative;
   flex: 1;
-  min-width: 280px;
+  min-width: min(280px, 100%);
 }
 
 .search-control {
@@ -428,13 +429,14 @@ body::after {
 .table-wrap {
   border: 1px solid var(--line);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background: #fff7fc;
   box-shadow: 0 10px 24px rgba(223, 137, 182, 0.2);
 }
 
 table {
   width: 100%;
-  min-width: 980px;
+  min-width: 920px;
   border-collapse: collapse;
   table-layout: fixed;
 }
@@ -512,6 +514,7 @@ tbody td.class-continuation {
   margin-top: 20px;
   border: 1px solid var(--line);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background: #fff7fc;
   box-shadow: 0 10px 24px rgba(223, 137, 182, 0.2);
   border-radius: 4px;
@@ -674,6 +677,21 @@ tbody td.class-continuation {
   opacity: 0.85;
 }
 
+@media (max-width: 1024px) {
+  .search-wrapper {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .danh-sach-container {
+    padding: 10px;
+  }
+
+  table {
+    min-width: 840px;
+  }
+}
+
 @media (max-width: 768px) {
   body {
     padding: 6px;
@@ -692,10 +710,91 @@ tbody td.class-continuation {
     grid-template-columns: 1fr;
   }
 
+  .search-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .search-label {
+    white-space: normal;
+  }
+
+  .danh-sach-container {
+    padding: 8px;
+  }
+
+  .week-filter {
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .week-filter-control {
+    min-width: 0;
+  }
+
+  table {
+    min-width: 760px;
+  }
+
   .schedule-conflict-toast {
     left: 12px;
     right: 12px;
     width: auto;
     top: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  body::before,
+  body::after {
+    display: none;
+  }
+
+  .search-panel,
+  .week-filter {
+    padding: 10px;
+  }
+
+  .search-title {
+    font-size: 1.08rem;
+  }
+
+  .search-subtitle {
+    font-size: 0.74rem;
+    margin-bottom: 10px;
+  }
+
+  .search-control,
+  .week-select {
+    font-size: 0.8rem;
+    height: 36px;
+  }
+
+  .selected-subjects-table {
+    font-size: 0.76rem;
+  }
+
+  .selected-subjects-table th,
+  .selected-subjects-table td {
+    padding: 7px 8px;
+  }
+
+  table {
+    min-width: 700px;
+  }
+
+  thead th {
+    font-size: 0.78rem;
+    padding: 10px 6px;
+  }
+
+  tbody td {
+    height: 44px;
+    font-size: 0.75rem;
+  }
+
+  .class-card {
+    font-size: 0.64rem;
   }
 }
